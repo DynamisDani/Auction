@@ -1,15 +1,7 @@
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { CopilotKit } from "@copilotkit/react-core";
+import "@copilotkit/react-ui/styles.css";
 
 export const metadata = {
   title: "Create Next App",
@@ -19,10 +11,16 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body>
+        <ClerkProvider>
+          <CopilotKit publicApiKey={process.env.NEXT_PUBLIC_COPILOT_API_KEY}>
+            <header className="p-4 bg-gray-100">
+              <SignedOut><SignInButton /></SignedOut>
+              <SignedIn><UserButton /></SignedIn>
+            </header>
+            <main className="container mx-auto p-4">{children}</main>
+          </CopilotKit>
+        </ClerkProvider>
       </body>
     </html>
   );
